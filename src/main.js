@@ -1,5 +1,5 @@
 const cardsContainer = document.getElementById('cards-container');
-const cardStyleClass = 'bg-gray-300 p-2 mt-2 rounded-lg';
+const cardStyleClass = 'bg-gray-300 p-4 rounded-lg capitalize';
 
 let allPokemon = [];
 let url = 'https://pokeapi.co/api/v2/pokemon?limit=20';
