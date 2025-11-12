@@ -28,7 +28,7 @@ fetch(path)
     return res.json();
   })
   .then((data) => {
-    console.log('Raw data:', data);
+    console.log('Raw data:', data.results);
   })
   .catch(console.error);
 
