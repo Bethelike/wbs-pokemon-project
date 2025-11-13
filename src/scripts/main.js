@@ -2,9 +2,7 @@ const cardsContainer = document.getElementById('cards-container');
 const cardStyleClass = 'bg-gray-300 p-4 rounded-lg capitalize';
 
 let allPokemon = [];
-let url = 'https://pokeapi.co/api/v2/pokemon?limit=20';
-
-const path = 'https://pokeapi.co/api/v2/pokemon?limit=100';
+let allPokemonPath = 'https://pokeapi.co/api/v2/pokemon?limit=20';
 
 async function fetchAllPokemon(path) {
   try {
@@ -36,7 +34,7 @@ async function loadPokemon(path) {
   }
 }
 
-fetchAllPokemon(url).then((results) => {
+fetchAllPokemon(allPokemonPath).then((results) => {
   console.log(results[0]);
   results.forEach((result) => {
     const pokemonIdPath = result.url;
