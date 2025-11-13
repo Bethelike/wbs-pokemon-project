@@ -34,17 +34,6 @@ async function loadPokemon(path) {
   }
 }
 
-fetchAllPokemon(allPokemonPath).then((results) => {
-  console.log(results[0]);
-  results.forEach((result) => {
-    const pokemonIdPath = result.url;
-    loadPokemon(pokemonIdPath).then((pokemon) => {
-      console.log(pokemon);
-      createCard(pokemon);
-    });
-  });
-});
-
 // create function that takes the pokemon fetch response as an argument
 // use the data from the response to populate the card
 // fill in the card with the required information
@@ -69,6 +58,18 @@ function createCard(pokemon) {
   cardDiv.appendChild(span);
   cardDiv.appendChild(catchBtn);
 }
+
+// Main function
+fetchAllPokemon(allPokemonPath).then((results) => {
+  console.log(results[0]);
+  results.forEach((result) => {
+    const pokemonIdPath = result.url;
+    loadPokemon(pokemonIdPath).then((pokemon) => {
+      console.log(pokemon);
+      createCard(pokemon);
+    });
+  });
+});
 
 // GET pokemon by name endpoint
 // endpoint https://pokeapi.co/api/v2/pokemon/ivysaur
