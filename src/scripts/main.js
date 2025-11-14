@@ -1,33 +1,35 @@
 const cardsContainer = document.getElementById('cards-container');
 const cardStyleClass = 'bg-gray-300 p-4 rounded-lg capitalize';
+const main = document.querySelector('main');
 
 let allPokemon = [];
-let allPokemonPath = 'https://pokeapi.co/api/v2/pokemon?limit=20';
+let allPokemonPath = 'https://pokeapi.co/api/v2/pokemon';
+let nextPage = 'https://pokeapi.co/api/v2/pokemon?offset=20&limit=20';
 
-async function fetchAllPokemon(path) {
+async function fetchPokemon(path) {
   try {
-    // while (path) {
     const res = await fetch(path);
     if (!res.ok) throw new Error('Something went wrong');
 
     const data = await res.json();
-    allPokemon = allPokemon.concat(data.results);
+    const partialResults = data.results;
+    // adds partial results to the general array
+    allPokemon = allPokemon.concat(partialResults);
     path = data.next;
     console.log('Still fetching...');
-    // }
-    console.log(`Fetched ${allPokemon.length} Pokémon`);
-    return allPokemon;
+    //returns partial results and the URL for the next page
+    return { partialResults, next: data.next };
   } catch (err) {
     console.error(err);
   }
 }
 
+// calls the pokemon by it's path (id)
 async function loadPokemon(path) {
   try {
     const res = await fetch(path);
     if (!res.ok) throw new Error('Something went wrong');
     const data = await res.json();
-    console.log(data);
     return data;
   } catch (err) {
     console.error(err);
@@ -59,16 +61,45 @@ function createCard(pokemon) {
   cardDiv.appendChild(catchBtn);
 }
 
-// Main function
-fetchAllPokemon(allPokemonPath).then((results) => {
-  console.log(results[0]);
-  results.forEach((result) => {
-    const pokemonIdPath = result.url;
-    loadPokemon(pokemonIdPath).then((pokemon) => {
-      console.log(pokemon);
-      createCard(pokemon);
+function createLoadMoreBtn() {
+  const loadMore = document.createElement('div');
+  const loadMoreBtn = document.createElement('button');
+  loadMore.classList = 'flex justify-center';
+  loadMoreBtn.classList = 'load-more-items bg-gray-300 p-3 border-3 border-gray-100';
+  loadMoreBtn.textContent = 'Load more';
+  loadMore.appendChild(loadMoreBtn);
+  main.appendChild(loadMore);
+}
+
+async function loadMorePokemon(nextPage) {
+  const btn = document.querySelector('.load-more-items');
+  btn.addEventListener('click', () => {
+    fetchPokemon(nextPage).then(({ partialResults, next }) => {
+      nextPage = next;
+      partialResults.forEach((result) => {
+        const pokemonIdPath = result.url;
+        loadPokemon(pokemonIdPath).then((pokemon) => {
+          createCard(pokemon);
+        });
+      });
     });
   });
+}
+
+// Main function
+document.addEventListener('DOMContentLoaded', () => {
+  fetchPokemon(allPokemonPath).then(({ partialResults }) => {
+    console.log(partialResults);
+    partialResults.forEach((result) => {
+      const pokemonIdPath = result.url;
+      loadPokemon(pokemonIdPath).then((pokemon) => {
+        // console.log(pokemon);
+        createCard(pokemon);
+      });
+    });
+  });
+  createLoadMoreBtn();
+  loadMorePokemon(nextPage);
 });
 
 // GET pokemon by name endpoint
