@@ -30,7 +30,22 @@ async function loadPokemon(path) {
     const res = await fetch(path);
     if (!res.ok) throw new Error('Something went wrong');
     const data = await res.json();
-    return data;
+
+    // Extract the array of stats objects
+    const stats = data.stats.map((s) => ({
+      value: s.base_stat,
+      name: s.stat.name,
+      effort: s.effort,
+    }));
+
+    console.log(stats);
+
+    return {
+      id: data.id,
+      name: data.name,
+      image: data.sprites.other['official-artwork'].front_default,
+      stats,
+    };
   } catch (err) {
     console.error(err);
   }
@@ -43,22 +58,28 @@ function createCard(pokemon) {
   const cardDiv = document.createElement('div');
   const cardTitle = document.createElement('h6');
   const image = document.createElement('img');
-  const span = document.createElement('span');
+  const statsList = document.createElement('ul');
   const catchBtn = document.createElement('button');
 
   cardDiv.id = pokemon.id;
   cardDiv.classList = `${pokemon.name} flex flex-col items-center ${cardStyleClass}`;
   cardTitle.textContent = pokemon.name;
-  image.src = pokemon.sprites.other['official-artwork'].front_default;
-  span.textContent = `Stats: ${pokemon.stats[0].base_stat} ...`;
+  image.src = pokemon.image;
   catchBtn.textContent = 'Catch it!';
   catchBtn.classList = 'mt-2 p-3 border-3 border-gray-100';
 
   cardsContainer.appendChild(cardDiv);
   cardDiv.appendChild(cardTitle);
   cardDiv.appendChild(image);
-  cardDiv.appendChild(span);
+  cardDiv.appendChild(statsList);
   cardDiv.appendChild(catchBtn);
+
+  pokemon.stats.forEach((stats) => {
+    console.log(stats);
+    const statsItem = document.createElement('li');
+    statsItem.textContent = `${stats.name}: ${stats.value}`;
+    statsList.appendChild(statsItem);
+  });
 }
 
 function createLoadMoreBtn() {
