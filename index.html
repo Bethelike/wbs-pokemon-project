@@ -27,7 +27,22 @@
     <!-- Main starts here -->
     <main>
       <!-- Search bar starts here -->
-      <div></div>
+      <div class="w-full max-w-md mx-auto mt-8">
+        <form id="search-form" class="flex items-center gap-2">
+          <input
+            id="search-input"
+            type="text"
+            placeholder="Search Pokémon..."
+            class="flex-grow p-2 border rounded-lg"
+          />
+          <button
+            type="submit"
+            class="bg-[#E3350D] text-white px-4 py-2 rounded-lg hover:bg-red-600 transition"
+          >
+            Search
+          </button>
+        </form>
+      </div>
       <!-- End of search bar -->
 
       <!-- Pokemon cards container starts here -->
