@@ -1,11 +1,61 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
-</head>
-<body>
-    
-</body>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Pokedex Diary</title>
+    <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+  </head>
+  <body>
+    <!-- Header starts here -->
+    <header>
+      <!-- Navbar starts here -->
+      <nav class="flex justify-between items-center px-8 py-4 bg-[#E3350D]">
+        <!-- Left: Logo -->
+        <div class="flex items-center space-x-3">
+          <img src="./static/pokedex-logo.png" alt="PokéDex Logo" class="h-10 w-auto" />
+        </div>
+        <!-- Right: Links -->
+        <div class="flex items-center space-x-8 text-white font-semibold text-lg">
+          <a href="." class="hover:text-yellow-300 transition-colors">Home</a>
+          <a href="pokedex.html" class="hover:text-yellow-300 transition-colors">Favourites</a>
+        </div>
+      </nav>
+    </header>
+    <!-- End of header -->
+
+    <!-- Main starts here -->
+    <main>
+      <!-- Search bar starts here -->
+      <div class="w-full max-w-md mx-auto mt-8">
+        <form id="search-form" class="flex items-center gap-2">
+          <input
+            id="search-input"
+            type="text"
+            placeholder="Search Pokémon..."
+            class="flex-grow p-2 border rounded-lg"
+          />
+          <button
+            type="submit"
+            class="bg-[#E3350D] text-white px-4 py-2 rounded-lg hover:bg-red-600 transition"
+          >
+            Search
+          </button>
+        </form>
+      </div>
+      <!-- End of search bar -->
+
+      <!-- Pokemon cards container starts here -->
+      <div id="cards-container" class="grid grid-cols-4 gap-8 m-20"></div>
+      <!-- End of pokemon container -->
+    </main>
+    <!-- End of main -->
+
+    <!-- Footer starts here -->
+    <footer></footer>
+    <!-- End of footer -->
+
+    <!-- JavaScript file -->
+    <script src="./src/scripts/main.js"></script>
+  </body>
 </html>
