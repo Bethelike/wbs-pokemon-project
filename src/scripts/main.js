@@ -37,9 +37,6 @@ async function loadPokemon(path) {
       name: s.stat.name,
       effort: s.effort,
     }));
-
-    console.log(stats);
-
     return {
       id: data.id,
       name: data.name,
@@ -66,7 +63,7 @@ function createCard(pokemon) {
   cardTitle.textContent = pokemon.name;
   image.src = pokemon.image;
   catchBtn.textContent = 'Catch it!';
-  catchBtn.classList = 'mt-2 p-3 border-3 border-gray-100';
+  catchBtn.classList = 'catch-button mt-2 p-3 border-3 border-gray-100';
 
   cardsContainer.appendChild(cardDiv);
   cardDiv.appendChild(cardTitle);
@@ -75,7 +72,6 @@ function createCard(pokemon) {
   cardDiv.appendChild(catchBtn);
 
   pokemon.stats.forEach((stats) => {
-    console.log(stats);
     const statsItem = document.createElement('li');
     statsItem.textContent = `${stats.name}: ${stats.value}`;
     statsList.appendChild(statsItem);
@@ -107,6 +103,26 @@ async function loadMorePokemon(nextPage) {
   });
 }
 
+// Get the local storage and return the object
+function getLocalStorageItem() {
+  const localStorageItem = JSON.parse(localStorage.getItem('favoritePokemon')) || [];
+  return localStorageItem;
+}
+
+// Save to local storage a new item
+function saveToLocalStorage(newItem) {
+  const updatedLocalStorage = [newItem, ...getLocalStorageItem()];
+  localStorage.setItem('favoritePokemon', JSON.stringify(updatedLocalStorage));
+}
+
+// remove item from the local storage
+function removeFromLocalStorage(oldItem) {
+  const currentStorage = getLocalStorageItem();
+  // creates a new array by filtering out the found item
+  currentStorage = currentStorage.filter(({ id }) => id === oldItem);
+  localStorage.setItem('favoritePokemon', JSON.stringify(currentStorage));
+}
+
 // Main function
 document.addEventListener('DOMContentLoaded', () => {
   fetchPokemon(allPokemonPath).then(({ partialResults }) => {
@@ -114,7 +130,6 @@ document.addEventListener('DOMContentLoaded', () => {
     partialResults.forEach((result) => {
       const pokemonIdPath = result.url;
       loadPokemon(pokemonIdPath).then((pokemon) => {
-        // console.log(pokemon);
         createCard(pokemon);
       });
     });
@@ -129,7 +144,6 @@ document.addEventListener('DOMContentLoaded', () => {
 // GET pokemon by id endpoint
 // https://pokeapi.co/api/v2/pokemon/1
 
-
 // --- SEARCH BAR LOGIC ---
 
 const searchForm = document.getElementById('search-form');
@@ -143,14 +157,14 @@ searchForm.addEventListener('submit', async (e) => {
 
   try {
     const res = await fetch(`https://pokeapi.co/api/v2/pokemon/${query}`);
-    if (!res.ok) throw new Error("Pokémon not found");
+    if (!res.ok) throw new Error('Pokémon not found');
 
     const data = await res.json();
 
     // Clear the container before showing the searched Pokémon
-    cardsContainer.innerHTML = "";
+    cardsContainer.innerHTML = '';
 
-    console.log("Searched Pokémon:", data);
+    console.log('Searched Pokémon:', data);
 
     // Create card from the actual Pokémon data (not just the name)
     const cardDiv = document.createElement('div');
@@ -163,11 +177,10 @@ searchForm.addEventListener('submit', async (e) => {
     `;
 
     cardsContainer.appendChild(cardDiv);
-
   } catch (error) {
     console.error(error);
     cardsContainer.innerHTML = `<p class="text-red-500 text-center mt-4">Pokémon not found</p>`;
   }
 
-  searchInput.value = "";
+  searchInput.value = '';
 });
